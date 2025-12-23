@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EVOLUTION OF HCI</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #1e3a8a, #eaf2fb);
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .menu ul {
+            display: flex;
+            gap: 40px;
+            padding: 12px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 40px;
+            background: transparent;
+        }
+        .menu li {
+            list-style: none;
+        }
+        .menu a {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+        }
+        .container {
+            max-width: 1350px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 35px 40px 40px;
+            border-radius: 20px;
+        }
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+        }
+        @keyframes subtitleZoom {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-style: italic;
+            color: #34495e;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: subtitleZoom 2s ease-out forwards;
+            animation-delay: 1s;
+        }
+        .subtitle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+        }
+        .subtitle-wrapper img {
+            width: 300px;
+            height: auto;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: subtitleZoom 2s ease-out forwards;
+            animation-delay: 1s;
+        }
+        .paragraph-card {
+            background-color: #f9fafb;
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .paragraph-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .paragraph-card p {
+            margin: 0;
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        .inline-title {
+            display: block;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            border-radius: 14px;
+            padding: 12px 0;
+            min-width: 220px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .dropdown-content li {
+            list-style: none;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 10px 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        .dropdown-content a:hover {
+            background-color: #eaf2fb;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAV -->
+    <nav class="menu">
+        <ul>
+            <li class="dropdown">
+                <a href="index.html">Home</a>
+                <ul class="dropdown-content">
+                    <li><a href="Evolution.html">Evolution of HCI</a></li>
+                    <li><a href="User.html">Why the User Matters</a></li>
+                    <li><a href="Future.html">Future of HCI</a></li>
+                </ul>
+            </li>
+            <li><a href="#app">Download our App!</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- CONTENT -->
+    <div class="container">
+        <h1>EVOLUTION OF HUMAN–COMPUTER INTERACTION</h1>
+        <div class="subtitle-wrapper">
+            <h2>
+                "It is easy to design devices that work well when everything goes as planned. 
+                The hard and necessary part of design is to make things work well even when things do not go as planned."
+            </h2>
+        </div>
+        <div class="paragraph-card">
+            <img src="batch_systems.jpg" alt="Early computers">
+            <p>
+                <span class="inline-title">Early Computing (1940s–1960s)</span>
+                Interaction was indirect and technical, based on batch processing and punched cards, accessible only to experts.
+            </p>
+        </div>
+        <div class="paragraph-card">
+            <img src="cli.jpg" alt="Command line">
+            <p>
+                <span class="inline-title">Command-Line Interfaces</span>
+                Users interacted with computers through textual commands, requiring memorization and technical knowledge.
+            </p>
+        </div>
+        <div class="paragraph-card">
+            <img src="gui.jpg" alt="Graphical user interface">
+            <p>
+                <span class="inline-title">Graphical User Interfaces (GUI)</span>
+                The introduction of windows, icons, menus, and pointers made computers more accessible to non-expert users.
+            </p>
+        </div>
+        <div class="paragraph-card">
+            <img src="mobile_touch.jpg" alt="Touch interaction">
+            <p>
+                <span class="inline-title">Mobile and Touch Interaction</span>
+                Touchscreens and mobile devices enabled natural, direct interaction through gestures and mobility.
+            </p>
+        </div>
+        <div class="paragraph-card">
+            <img src="ai_hci.jpg" alt="AI and HCI">
+            <p>
+                <span class="inline-title">AI and Intelligent Interfaces</span>
+                Modern HCI focuses on adaptive, intelligent systems that understand users, context, and emotions.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
+
