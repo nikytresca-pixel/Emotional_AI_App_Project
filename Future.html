@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of HCI: AI</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #a855f7;
+            --light-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #581c87 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Animated neural network background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+        }
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+        .neural-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            transform-origin: left center;
+        }
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+        }
+        header h1 {
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+            opacity: 1;
+            transform: none;
+        }
+        header p {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        /* Navigation */
+        .menu {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+        .menu ul {
+            display: flex;
+            gap: 50px;
+            padding: 18px 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        .menu li {
+            list-style: none;
+        }
+        .menu a {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        }
+        .menu a:hover::after {
+            width: 100%;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 15px 0;
+            min-width: 240px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: dropdownFadeIn 0.3s ease forwards;
+        }
+        @keyframes dropdownFadeIn {
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(5px);
+            }
+        } 
+        .dropdown-content a {
+            display: block;
+            padding: 12px 25px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            color: #e2e8f0;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .dropdown-content a:hover {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+        }
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        /* AI-themed sections */
+        .section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            padding: 45px;
+            margin-bottom: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(168, 85, 247, 0.2);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section:hover {
+            box-shadow: 0 25px 80px rgba(168, 85, 247, 0.4);
+            transform: translateY(-5px);
+        }
+        .section h2 {
+            font-family: 'Space Mono', monospace;
+            margin-top: 0;
+            color: var(--primary-dark);
+            font-size: 1.9rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), transparent);
+        }   
+        .section p {
+            line-height: 2;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+        }
+        .ai-cards {
+            display: flex;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .ai-card {
+            flex: 1; /* tutte larghe uguali */
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .ai-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(168, 85, 247, 0.25);
+        }
+        .ai-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        .ai-card p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        .app-images {
+            display: flex;              /* ⬅️ affiancate */
+            justify-content: center;
+            align-items: center;
+            gap: 40px;                  /* spazio tra le immagini */
+            margin-top: 40px;
+        }
+        .app-images img {
+            width: 250px;        /* stessa larghezza */
+            height: 250px;       /* stessa altezza */
+            object-fit: cover;  /* riempie senza deformare */
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 30px 25px;
+            }
+            
+            .ai-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-demo {
+                padding: 30px 20px;
+            }
+        }
+        #App {
+            background: linear-gradient(
+                135deg,
+                #4c1d95,   /* viola scuro */
+                #6d28d9,   /* viola principale */
+                #7c3aed    /* viola chiaro */
+            );
+            border-radius: 30px;
+            padding: 80px 60px;
+            color: white;
+        }
+        #App h2 {
+            color: #ffffff;
+        }
+        #App p {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        #App .app-images img {
+            background-color: white;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <div class="neural-bg" id="neuralBg"></div>
+    <!-- Header -->
+    <header>
+        <h1>HUMAN COMPUTER INTERACTION</h1>
+        <p>The Future of HCI: Artificial Intelligence</p>
+    </header>
+    <!-- Navigation -->
+   <nav class="menu">
+        <ul>
+            <li class="dropdown">
+                <a href="Prima pagina.html">Home</a>
+                <ul class="dropdown-content">
+                    <li><a href="Evolution.html">Evolution of HCI</a></li>
+                    <li><a href="User.html">Why the User Matters</a></li>
+                    <li><a href="Future.html">Future of HCI</a></li>
+                </ul>
+            </li>
+            <li><a href="Download.html">Download our App!</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="section" id="ai-introduction">
+            <h2>The AI Revolution in HCI</h2>
+            <p>
+                Artificial Intelligence is fundamentally transforming how humans interact with computers. 
+                Modern AI systems can understand natural language, recognize patterns, learn from experience, 
+                and adapt to individual users in ways that were impossible just a decade ago.
+            </p>
+            <p style="margin-top: 20px;">
+                This revolution goes beyond simple automation—AI enables computers to understand context, 
+                anticipate needs, and provide intelligent assistance that feels natural and intuitive.
+            </p>
+        </div>
+        <div class="section" id="ai-features-section">
+            <h2>Key AI Technologies Shaping HCI</h2>
+            <div class="ai-cards">
+                <div class="ai-card">
+                    <h3>🎯 Computer Vision</h3>
+                    <p>
+                        Advanced image recognition allows interfaces to understand visual context, enabling gesture control, 
+                        facial recognition, and augmented reality experiences.
+                    </p>
+                </div>
+                <div class="ai-card">
+                    <h3>🧠 Machine Learning</h3>
+                    <p>
+                        Systems that learn from user behavior can personalize experiences, predict needs, 
+                        and continuously improve their performance over time.
+                    </p>
+                </div>
+                <div class="ai-card">
+                    <h3>🤝 Emotion Recognition</h3>
+                    <p>
+                        Affective computing enables systems to detect and respond to human emotions, 
+                        creating more empathetic and responsive interfaces.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="section" id="App">
+            <h2>Emotional AI App</h2>
+            <div class="app-images">
+                <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\HCI_logo_300x300.png" alt="Logo">
+                <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\QR Code.png" alt="QRcode">
+            </div>
+            <p>
+                Let's verify in our Emotional AI App: we'll have proof in one tap!
+            </p>
+        </div>
+        <div class="section" id="challenges">
+            <h2>Challenges and Considerations</h2>
+            <p>
+                While AI brings tremendous opportunities to HCI, it also presents important challenges. 
+                Privacy concerns, algorithmic bias, transparency, and the need for human oversight are 
+                critical considerations as we design AI-powered interfaces.
+            </p>
+            <p style="margin-top: 20px;">
+                The future of HCI must balance the power of AI with ethical design principles that 
+                prioritize user agency, fairness, and trust. Successful AI-powered interfaces will 
+                augment human capabilities rather than replace human decision-making.
+            </p>
+        </div>
+        <div class="section" id="future-vision">
+            <h2>Vision for Tomorrow</h2>
+            <p>
+                The future of Human–Computer Interaction powered by AI promises interfaces that are 
+                invisible, intuitive, and intelligent. Imagine systems that understand your intent 
+                before you articulate it, adapt to your working style automatically, and seamlessly 
+                blend digital and physical experiences.
+            </p>
+            <p style="margin-top: 20px;">
+                From brain-computer interfaces to ambient computing environments, AI will enable 
+                new modalities of interaction that feel less like using a computer and more like 
+                collaborating with an intelligent assistant that truly understands you.
+            </p>
+        </div>
+    </div>
+    <footer>
+        © Human Computer Interaction | The Future is Now
+    </footer>
+    
+    <script>
+        $(document).ready(function() {
+            // Create neural network animation
+            function createNeuralNetwork() {
+                const container = $('#neuralBg');
+                const nodes = [];
+                const numNodes = 20;
+                // Create nodes
+                for (let i = 0; i < numNodes; i++) {
+                    const node = $('<div class="neural-node"></div>');
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    node.css({
+                        left: x + '%',
+                        top: y + '%'
+                    });
+                    container.append(node);
+                    nodes.push({element: node, x: x, y: y});
+                }
+                // Create connections between nearby nodes
+                nodes.forEach((node1, i) => {
+                    nodes.forEach((node2, j) => {
+                        if (i < j) {
+                            const distance = Math.sqrt(
+                                Math.pow(node2.x - node1.x, 2) + 
+                                Math.pow(node2.y - node1.y, 2)
+                            );
+                            if (distance < 30) {
+                                const connection = $('<div class="neural-connection"></div>');
+                                const angle = Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
+                                connection.css({
+                                    left: node1.x + '%',
+                                    top: node1.y + '%',
+                                    width: distance + '%',
+                                    transform: 'rotate(' + angle + 'deg)',
+                                    animationDelay: Math.random() * 3 + 's'
+                                });
+                                container.append(connection);
+                            }
+                        }
+                    });
+                });
+            }
+            createNeuralNetwork();
+            // Animate menu on load
+            setTimeout(function() {
+                $('.menu').css({
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }).css('transition', 'all 0.8s ease');
+            }, 200);
+            // Animate container
+            setTimeout(function() {
+                $('.container').css({
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }).css('transition', 'all 1s ease');
+            }, 400);
+            setTimeout(function() {
+                $('.section').css({
+                    opacity: '1',
+                    transform: 'scale(1)'
+                }).css('transition', 'all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)');
+            }, 800);
+            // Enter key support
+            $('#aiInput').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#aiSubmit').click();
+                }
+            });
+            // Parallax effect
+            $(window).scroll(function() {
+                const scrolled = $(window).scrollTop();
+                $('#neuralBg').css('transform', 'translateY(' + (scrolled * 0.3) + 'px)');
+            });
+        });
+    </script>
+</body>
+</html>

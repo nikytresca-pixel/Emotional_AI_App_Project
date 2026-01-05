@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMAN COMPUTER INTERACTION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #a855f7;
+            --light-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #581c87 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Animated neural network background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }  
+        .neural-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            transform-origin: left center;
+        }   
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 80px 20px 60px;
+            color: white;
+            isolation: isolate;
+        }  
+        header h1 {
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+        } 
+        /* Navigation */
+        .menu {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        .menu ul {
+            display: flex;
+            gap: 50px;
+            padding: 18px 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }  
+        .menu li {
+            list-style: none;
+            position: relative;
+        }
+        .menu a {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        } 
+        .menu a:hover::after {
+            width: 100%;
+        } 
+        /* Dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 15px 0;
+            min-width: 240px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: dropdownFadeIn 0.3s ease forwards;
+        }
+        @keyframes dropdownFadeIn {
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(5px);
+            }
+        } 
+        .dropdown-content a {
+            display: block;
+            padding: 12px 25px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            color: #e2e8f0;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .dropdown-content a:hover {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+        }
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 30px auto;
+            background: white;
+            padding: 60px 50px;
+            border-radius: 30px;
+            box-shadow: 0 25px 100px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        /* Title Section */
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 3.5rem;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: -1px;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .subtitle-wrapper {
+            display: flex;
+            align-items: center;      
+            justify-content: center;  
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 25px;
+            border-left: 6px solid var(--accent-cyan);
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        h2 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 600;
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            line-height: 1.8;
+            flex: 1;
+        }
+        .subtitle-wrapper img {
+            width: 350px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s ease;
+        }
+        .subtitle-wrapper img:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+        /* Interactive Cards */
+        .paragraph-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .paragraph-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .paragraph-card:hover::before {
+            left: 100%;
+        }
+        .paragraph-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(6, 182, 212, 0.25);
+            border-color: var(--accent-cyan);
+        }
+        .paragraph-card img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            flex-shrink: 0;
+            transition: transform 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .paragraph-card:hover img {
+            transform: scale(1.1) rotate(-3deg);
+        }
+        .paragraph-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        .inline-title {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 20px;
+        }
+        .inline-title::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-size: 1.4rem;
+        }
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .subtitle-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+            .paragraph-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .paragraph-card img {
+                width: 100%;
+                max-width: 250px;
+            }
+            .menu ul {
+                gap: 20px;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+     <!-- Neural Network Background -->
+    <div class="neural-bg" id="neuralBg"></div>
+    <header>
+        <h1>HUMAN COMPUTER INTERACTION</h1>
+    </header>
+    <!-- Navigation -->
+    <nav class="menu">
+        <ul>
+            <li class="dropdown">
+                <a href="Prima pagina.html">Home</a>
+                <ul class="dropdown-content">
+                    <li><a href="Evolution.html">Evolution of HCI</a></li>
+                    <li><a href="User.html">Why the User Matters</a></li>
+                    <li><a href="Future.html">Future of HCI</a></li>
+                </ul>
+            </li>
+            <li><a href="Download.html">Download our App!</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- Main Content -->
+    <div class="container"> 
+        <div class="subtitle-wrapper">
+            <h2>
+                "How technological evolution can progressively focus on people and user interaction, 
+                not just technology."
+            </h2>
+            <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\HCI_logo_300x300.png" alt="HCI illustration">
+        </div>
+        <div class="paragraph-card" data-card="1">
+            <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\immagine 4.jpg" alt="Evolution of HCI">
+            <p>
+                <span class="inline-title" href="Evolution.html">The Evolution of Human Computer Interaction</span>
+                Discover how technological progress has reshaped the way we interact with computers, 
+                from command-line interfaces to intuitive touchscreens and voice assistants.
+            </p>
+        </div>
+        <div class="paragraph-card" data-card="2">
+            <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\immagine 1.jpg" alt="User importance">
+            <p>
+                <span class="inline-title" href="User.html">Why is the User So Important?</span>
+                The user is crucial in Human–Computer Interaction. Design decisions must be driven 
+                by human needs, cognitive abilities, and behavioral patterns.
+            </p>
+        </div>        
+        <div class="paragraph-card" data-card="3">
+            <img src="C:\Users\Pietro\Desktop\Università\Web\Web page\immagine 3.gif" alt="The future of HCI: AI">
+            <p>
+                <span class="inline-title" href="Future.html">The Future of HCI: Artificial Intelligence</span>
+                Artificial Intelligence is revolutionizing Human–Computer Interaction by creating 
+                systems that adapt, learn, and respond intelligently to user needs.
+            </p>
+        </div>
+    </div>
+    <footer>
+        © Human Computer Interaction | The Future is Now
+    </footer>
+    <script>
+        $(document).ready(function() {
+            function createNeuralNetwork() {
+                const container = $('#neuralBg');
+                const nodes = [];
+                const numNodes = 20;
+                // Create nodes
+                for (let i = 0; i < numNodes; i++) {
+                    const node = $('<div class="neural-node"></div>');
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    node.css({
+                        left: x + '%',
+                        top: y + '%'
+                    });
+                    container.append(node);
+                    nodes.push({element: node, x: x, y: y});
+                }
+                // Create connections between nearby nodes
+                nodes.forEach((node1, i) => {
+                    nodes.forEach((node2, j) => {
+                        if (i < j) {
+                            const distance = Math.sqrt(
+                                Math.pow(node2.x - node1.x, 2) + 
+                                Math.pow(node2.y - node1.y, 2)
+                            );
+                            if (distance < 30) {
+                                const connection = $('<div class="neural-connection"></div>');
+                                const angle = Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
+                                connection.css({
+                                    left: node1.x + '%',
+                                    top: node1.y + '%',
+                                    width: distance + '%',
+                                    transform: 'rotate(' + angle + 'deg)',
+                                    animationDelay: Math.random() * 3 + 's'
+                                });                   
+                                container.append(connection);
+                            }
+                        }
+                    });
+                });
+            }
+            createNeuralNetwork();
+            // Animate menu on load
+            setTimeout(function() {
+                $('.menu').css({
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }).css('transition', 'all 0.8s ease');
+            }, 200);
+            // Animate container
+            setTimeout(function() {
+                $('.container').css({
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }).css('transition', 'all 1s ease');
+            }, 400);
+            setTimeout(function() {
+                $('h1').css({
+                    opacity: '1',
+                    transform: 'scale(1)'
+                }).css('transition', 'all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)');
+            }, 800);
+            setTimeout(function() {
+                $('.subtitle-wrapper').css({
+                    opacity: '1',
+                    transform: 'translateX(0)'
+                }).css('transition', 'all 1s ease');
+            }, 1200);
+            // Animate cards sequentially
+            $('.paragraph-card').each(function(index) {
+                const card = $(this);
+                setTimeout(function() {
+                    card.css({
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    }).css('transition', 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)');
+                }, 1600 + (index * 200));
+            });
+            // Card click navigation
+            $('.paragraph-card').click(function() {
+                const cardNum = $(this).data('card');
+                const pages = ['Evolution.html', 'User.html', 'Future.html']; 
+                $(this).css('transform', 'scale(0.95)');
+                setTimeout(() => {
+                    window.location.href = pages[cardNum - 1];
+                }, 200);
+            });
+            // Parallax effect on mouse move
+            $(document).mousemove(function(e) {
+                const moveX = (e.pageX - $(window).width() / 2) / 50;
+                const moveY = (e.pageY - $(window).height() / 2) / 50; 
+                $('.subtitle-wrapper img').css({
+                    transform: `translate(${moveX}px, ${moveY}px) scale(1.05)`
+                });
+            });
+        });
+    </script>
+</body>
+</html>

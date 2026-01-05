@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of HCI: AI</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #a855f7;
+            --light-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #581c87 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Animated neural network background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+        }
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+        .neural-connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            transform-origin: left center;
+        }
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+        }
+        header h1 {
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+            opacity: 1;
+            transform: scale(1.0);
+        }
+        header p {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        /* Navigation */
+        .menu {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        .menu ul {
+            display: flex;
+            gap: 50px;
+            padding: 18px 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        .menu li {
+            list-style: none;
+            position: relative;
+        }
+        .menu a {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        }
+        .menu a:hover::after {
+            width: 100%;
+        }
+        /*Dropdown content*/
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 15px 0;
+            min-width: 240px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: dropdownFadeIn 0.3s ease forwards;
+        }
+        @keyframes dropdownFadeIn {
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(5px);
+            }
+        } 
+        .dropdown-content a {
+            display: block;
+            padding: 12px 25px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            color: #e2e8f0;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .dropdown-content a:hover {
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+        }
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        /* AI-themed sections */
+        .section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            padding: 45px;
+            margin-bottom: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(168, 85, 247, 0.2);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section:hover {
+            box-shadow: 0 25px 80px rgba(168, 85, 247, 0.4);
+            transform: translateY(-5px);
+        }
+        .section h2 {
+            font-family: 'Space Mono', monospace;
+            margin-top: 0;
+            color: var(--primary-dark);
+            font-size: 1.9rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), transparent);
+        }
+        .section p {
+            line-height: 2;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+        .section ul,
+        .section li {
+            font-family: 'Crimson Pro', serif; /* stesso font del testo */
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+        table td {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+        .table-icon {
+            width: 125px;
+            height: 125px;
+            object-fit: contain;
+        }
+        .text-cell {
+            padding-left: 20px;
+            font-family: 'Crimson Pro', serif;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.25rem;
+        }
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 30px 25px;
+            }
+            .ai-features {
+                grid-template-columns: 1fr;
+            }
+            .ai-demo {
+                padding: 30px 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="neural-bg" id="neuralBg"></div>
+    <!-- Navigation -->
+    <nav class="menu">
+        <ul>
+            <li class="dropdown">
+                <a href="Prima pagina.html">Home</a>
+                <ul class="dropdown-content">
+                    <li><a href="Evolution.html">Evolution of HCI</a></li>
+                    <li><a href="User.html">Why the User Matters</a></li>
+                    <li><a href="Future.html">Future of HCI</a></li>
+                </ul>
+            </li>
+            <li><a href="Download.html">Download our App!</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>HUMAN COMPUTER INTERACTION:<br>Why is the User So Important?</h1>
+    </header>
+    <div class="container">
+        <div class="section">
+            <h2>The Central Role of the User</h2>
+            <p>
+                Human-computer interaction (HCI) refers to a user-centered approach of design and development 
+                that optimizes synergy between human and computer. We can compare HCI to a continuous cycle, 
+                as each human action is followed by a response of the computer, and after that we act again.
+            </p>
+            <br>
+            <p>
+                Rather than designing technology for technology's sake, HCI prioritizes the needs, goals, 
+                and limitations of the user. This involves extensive research into human factors, cognitive 
+                psychology, social sciences, and design principles.
+            </p>
+        </div>
+        <div class="section">
+            <h2>Responsive Design: Ensuring Consistent User Experience</h2>
+            <p>
+                Responsive design is an approach to web design which aims at allowing desktop pages to be 
+                viewed in response to the size of the screen, in order to facilitate usability, navigation 
+                and information seeking.
+            </p>
+            <br>
+            <p>Responsive design has significant benefits, as you may:</p>
+            <ul>
+                <li>Reach a larger audience across all devices;</li>
+                <li>Save time and development efforts with a single codebase;</li>
+                <li>Ensure design consistency across devices and platforms;</li>
+                <li>Improve SEO and search engine rankings;</li>
+                <li>Reduce maintenance costs and complexity.</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>The Use of Graphical and Interaction Elements</h2>
+            <p>
+                In Human–Computer Interaction, responsive design is not only about screen size, but about 
+                adapting the interface to users, contexts, and devices. Graphical and interaction elements 
+                play a central role in this adaptation.
+            </p>
+            <br>
+            <p>Here are some universal interaction elements with their meanings:</p>
+            <table>
+                <tr>
+                    <td class="icon-cell">
+                        <div class="icon-wrapper">
+                            <img src="C:\Users\Pietro\Desktop\Università\Web\Foto progetto\Cuore_felice.png" alt="Happy emotion icon" class="table-icon">
+                        </div>
+                    </td>
+                    <td class="text-cell">
+                        <strong>Happy Emotion:</strong>
+                        It expresses genuine appreciation in a constructive way, delivering positive and approving feedback.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="icon-cell">
+                        <div class="icon-wrapper">
+                            <img src="C:\Users\Pietro\Desktop\Università\Web\Foto progetto\cuore_triste.png" alt="Sad emotion icon" class="table-icon">
+                        </div>
+                    </td>
+                    <td class="text-cell">
+                        <strong>Sad Emotion:</strong>
+                        More than just an icon, it's a visual hug, representing empathy, support, and emotional care. Across all devices, it works to communicate 
+                        reassurance and put human values first. This simple expression of care is key to building trust and a genuine emotional connection.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="icon-cell">
+                        <div class="icon-wrapper">
+                            <img src="C:\Users\Pietro\Desktop\Università\Web\Foto progetto\Cuore_arrabbiato.png" alt="Angry emotion icon" class="table-icon">
+                        </div>
+                    </td>
+                    <td class="text-cell">
+                        <strong>Angry Emotion:</strong>
+                        This icon is designed for moments of frustration. It represents a deep breath and a step toward calmness. Across all devices, it gently 
+                        communicates emotional feedback, allowing users to recognize and settle their feelings with just a glance.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="icon-cell">
+                        <div class="icon-wrapper">
+                            <img src="C:\Users\Pietro\Desktop\Università\Web\Foto progetto\annoiata_ok.png" alt="Bored emotion icon" class="table-icon">
+                        </div>
+                    </td>
+                    <td class="text-cell">
+                        <strong>Bored Emotion:</strong>
+                        This heart icon is a spark of joy, designed to lift spirits and re-engage. Across all devices, it delivers an instant boost of friendly energy, 
+                        helping to turn a moment of boredom into one of connection and appreciation.
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <footer>
+        © Human Computer Interaction | The Future is Now
+    </footer>
+    <script>
+        $(document).ready(function() {
+            // Create neural network animation
+            function createNeuralNetwork() {
+                const container = $('#neuralBg');
+                const nodes = [];
+                const numNodes = 20;
+                // Create nodes
+                for (let i = 0; i < numNodes; i++) {
+                    const node = $('<div class="neural-node"></div>');
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    node.css({
+                        left: x + '%',
+                        top: y + '%'
+                    });
+                    container.append(node);
+                    nodes.push({element: node, x: x, y: y});
+                }
+                // Create connections between nearby nodes
+                nodes.forEach((node1, i) => {
+                    nodes.forEach((node2, j) => {
+                        if (i < j) {
+                            const distance = Math.sqrt(
+                                Math.pow(node2.x - node1.x, 2) + 
+                                Math.pow(node2.y - node1.y, 2)
+                            );
+                            if (distance < 30) {
+                                const connection = $('<div class="neural-connection"></div>');
+                                const angle = Math.atan2(node2.y - node1.y, node2.x - node1.x) * 180 / Math.PI;
+                                connection.css({
+                                    left: node1.x + '%',
+                                    top: node1.y + '%',
+                                    width: distance + '%',
+                                    transform: 'rotate(' + angle + 'deg)',
+                                    animationDelay: Math.random() * 3 + 's'
+                                });                   
+                                container.append(connection);
+                            }
+                        }
+                    });
+                });
+            }
+            createNeuralNetwork();
+            // Animate menu on load
+            setTimeout(function() {
+                $('.menu').css({
+                    opacity: '1',
+                    transform: 'translateY(0)'
+                }).css('transition', 'all 0.8s ease');
+            }, 200);
+            // Animate container
+            setTimeout(function() {
+                $('.container').css({
+                    opacity: '1',
+                    transform: 'scale(1)'
+                }).css('transition', 'all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)');
+            }, 400);
+            setTimeout(function() {
+                $('.section').css({
+                    opacity: '1',
+                    transform: 'translateX(0)'
+                }).css('transition', 'all 1s ease');
+            }, 800);
+            // Animate cards sequentially
+            $('.section h2').each(function(index) {
+                const card = $(this);
+                setTimeout(function() {
+                    card.css({
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    }).css('transition', 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)');
+                }, 1200 + (index * 200));
+            });
+            // Parallax effect on mouse move
+            $(document).mousemove(function(e) {
+                const moveX = (e.pageX - $(window).width() / 2) / 50;
+                const moveY = (e.pageY - $(window).height() / 2) / 50; 
+                $('.subtitle-wrapper img').css({
+                    transform: `translate(${moveX}px, ${moveY}px) scale(1.05)`
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
